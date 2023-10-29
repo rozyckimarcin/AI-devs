@@ -18,6 +18,10 @@ public class AIDevsTask1Executor {
    * @throws IOException if there is an exception
    */
   public static void main(String[] args) throws IOException {
+    if (args.length != 1) {
+      logger.error("Please add api-key as an program argument");
+      return;
+    }
     Tasks tasks = new Tasks();
     String token = tasks.getTokenForTask("helloapi", args[0]);
     String taskApiResponse = tasks.getTask(token);
