@@ -13,6 +13,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -25,7 +26,7 @@ public class Tasks {
 
   protected CloseableHttpClient httpClient;
 
-  private static String AI_DEVS_URL = "https://zadania.aidevs.pl/";
+  private static final String AI_DEVS_URL = "https://zadania.aidevs.pl/";
 
   public Tasks() {
     this.httpClient = HttpClients.createDefault();
@@ -50,12 +51,33 @@ public class Tasks {
     return getResponseCodeFromHttpClient(httpPostTask);
   }
 
+  public int postAnswer2(String token, String answer) throws IOException {
+    logger.info("Post AI-devs answer " + answer);
+    HttpPost httpPostTask = createHttpPostRequest(token, "answer", answer);
+    return getResponseCodeFromHttpClient(httpPostTask);
+  }
+
+  public int postAnswer(String token, List<Integer> answer) throws IOException {
+    logger.info("Post AI-devs answer " + answer);
+    HttpPost httpPostTask =
+        createHttpPostRequest(token, "answer", Map.of("answer", String.valueOf(answer)));
+    return getResponseCodeFromHttpClient(httpPostTask);
+  }
+
   private HttpPost createHttpPostRequest(String token, String page, Map<String, String> map)
       throws JsonProcessingException {
     ObjectMapper objectMapper = new ObjectMapper();
     HttpPost httpPostTask = new HttpPost(getUri(page, token));
+    logger.info("JSON Answer object: " + objectMapper.writeValueAsString(map));
     httpPostTask.setEntity(
         new StringEntity(objectMapper.writeValueAsString(map), ContentType.APPLICATION_JSON));
+    return httpPostTask;
+  }
+
+  private HttpPost createHttpPostRequest(String token, String page, String answer) {
+    HttpPost httpPostTask = new HttpPost(getUri(page, token));
+    logger.info("JSON Answer object: " + answer);
+    httpPostTask.setEntity(new StringEntity(answer, ContentType.APPLICATION_JSON));
     return httpPostTask;
   }
 

@@ -1,9 +1,13 @@
 package pl.com.rozyccy.aidevs;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /** Additional token extractor class. */
 public class TokenExtractor {
@@ -35,4 +39,31 @@ public class TokenExtractor {
       return null;
     }
   }
+
+  public static List<String> getListForToken(String jsonString, String key) throws JsonProcessingException {
+    List<String> list = new ArrayList<>();
+    ObjectMapper objectMapper = new ObjectMapper();
+    JsonNode rootNode = objectMapper.readTree(jsonString);
+    JsonNode inputArray = rootNode.get(key);
+
+    if (inputArray.isArray()) {
+      for (JsonNode item : inputArray) {
+        list.add(item.asText());
+      }
+    }
+    return list;
+  }
+
+  public static boolean getFlaggedFromResult(String jsonString) throws JsonProcessingException {
+    ObjectMapper objectMapper = new ObjectMapper();
+    JsonNode rootNode = objectMapper.readTree(jsonString);
+
+    // Extract the "flagged" field
+    return rootNode
+            .path("results")
+            .get(0)
+            .path("flagged")
+            .asBoolean();
+  }
+
 }
