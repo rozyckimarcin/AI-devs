@@ -2,10 +2,9 @@ import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.com.rozyccy.aidevs.Tasks;
+import pl.com.rozyccy.aidevs.datamodel.AIDevsTaskResponse;
 
 import java.io.IOException;
-
-import static pl.com.rozyccy.aidevs.TokenExtractor.getValueForToken;
 
 public class AIDevsTask1Executor {
 
@@ -23,11 +22,10 @@ public class AIDevsTask1Executor {
       return;
     }
     Tasks tasks = new Tasks();
-    String token = tasks.getTokenForTask("helloapi", args[0]);
-    String taskApiResponse = tasks.getTask(token);
-    logger.info("Your task is: {}", getValueForToken(taskApiResponse, "msg"));
-    String answer = getValueForToken(taskApiResponse, "cookie");
-    int responseCode = tasks.postAnswer(token, answer);
+    AIDevsTaskResponse tokenResponse = tasks.getTokenForTask("helloapi", args[0]);
+    AIDevsTaskResponse taskApiResponse = tasks.getTask(tokenResponse.token());
+    logger.info("Your task is: {}", taskApiResponse.msg());
+    int responseCode = tasks.postAnswer(tokenResponse.token(), taskApiResponse.cookie());
     if (responseCode == HttpStatus.SC_OK) {
       logger.info("!!! SUCCESS !!!");
     }
