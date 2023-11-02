@@ -13,33 +13,32 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import static pl.com.rozyccy.aidevs.TokenExtractor.getValueForToken;
+import pl.com.rozyccy.aidevs.datamodel.AIDevsTaskResponse;
 
 public class Tasks {
   private static final Logger logger = LogManager.getLogger(Tasks.class);
 
   protected CloseableHttpClient httpClient;
+  private final ObjectMapper objectMapper;
 
   private static final String AI_DEVS_URL = "https://zadania.aidevs.pl/";
 
   public Tasks() {
     this.httpClient = HttpClients.createDefault();
+    this.objectMapper = new ObjectMapper();
   }
 
-  public String getTokenForTask(String taskName, String apiKey) throws IOException {
+  public AIDevsTaskResponse getTokenForTask(String taskName, String apiKey) throws IOException {
     logger.info("Get AI-devs token for task name " + taskName);
-    HttpPost httpPostTask = createHttpPostRequest(taskName, "token", Map.of("apikey", apiKey));
-    String responseStr = getResponseFromHttpClient(httpPostTask);
-    return getValueForToken(responseStr, "token");
+    HttpPost httpPostTask = createHttpPostTokenRequest(taskName, Map.of("apikey", apiKey));
+    return getResponseFromHttpClient(httpPostTask);
   }
 
-  public String getTask(String token) throws IOException {
+  public AIDevsTaskResponse getTask(String token) throws IOException {
     logger.info("Get AI-devs task");
     HttpGet httpGetTask = new HttpGet(getUri("task", token));
     return getResponseFromHttpClient(httpGetTask);
@@ -47,35 +46,22 @@ public class Tasks {
 
   public int postAnswer(String token, String answer) throws IOException {
     logger.info("Post AI-devs answer " + answer);
-    HttpPost httpPostTask = createHttpPostRequest(token, "answer", Map.of("answer", answer));
+    HttpPost httpPostTask = createHttpPostRequest(token, answer);
     return getResponseCodeFromHttpClient(httpPostTask);
   }
 
-  public int postAnswer2(String token, String answer) throws IOException {
-    logger.info("Post AI-devs answer " + answer);
-    HttpPost httpPostTask = createHttpPostRequest(token, "answer", answer);
-    return getResponseCodeFromHttpClient(httpPostTask);
-  }
-
-  public int postAnswer(String token, List<Integer> answer) throws IOException {
-    logger.info("Post AI-devs answer " + answer);
-    HttpPost httpPostTask =
-        createHttpPostRequest(token, "answer", Map.of("answer", String.valueOf(answer)));
-    return getResponseCodeFromHttpClient(httpPostTask);
-  }
-
-  private HttpPost createHttpPostRequest(String token, String page, Map<String, String> map)
+  private HttpPost createHttpPostTokenRequest(String token, Map<String, String> map)
       throws JsonProcessingException {
     ObjectMapper objectMapper = new ObjectMapper();
-    HttpPost httpPostTask = new HttpPost(getUri(page, token));
+    HttpPost httpPostTask = new HttpPost(getUri("token", token));
     logger.info("JSON Answer object: " + objectMapper.writeValueAsString(map));
     httpPostTask.setEntity(
         new StringEntity(objectMapper.writeValueAsString(map), ContentType.APPLICATION_JSON));
     return httpPostTask;
   }
 
-  private HttpPost createHttpPostRequest(String token, String page, String answer) {
-    HttpPost httpPostTask = new HttpPost(getUri(page, token));
+  private HttpPost createHttpPostRequest(String token, String answer) {
+    HttpPost httpPostTask = new HttpPost(getUri("answer", token));
     logger.info("JSON Answer object: " + answer);
     httpPostTask.setEntity(new StringEntity(answer, ContentType.APPLICATION_JSON));
     return httpPostTask;
@@ -85,14 +71,14 @@ public class Tasks {
     return AI_DEVS_URL + page + "/" + token;
   }
 
-  private String getResponseFromHttpClient(HttpRequestBase httpRequest) throws IOException {
+  private AIDevsTaskResponse getResponseFromHttpClient(HttpRequestBase httpRequest) throws IOException {
     HttpResponse response = httpClient.execute(httpRequest);
-    String responseStr = EntityUtils.toString(response.getEntity());
+    AIDevsTaskResponse token = objectMapper.readValue(EntityUtils.toString(response.getEntity()), AIDevsTaskResponse.class);
     logger.debug(
         "Response code: {}\nResponse body: {}",
         response.getStatusLine().getStatusCode(),
-        responseStr);
-    return responseStr;
+        token);
+    return token;
   }
 
   private int getResponseCodeFromHttpClient(HttpRequestBase httpRequest) throws IOException {
