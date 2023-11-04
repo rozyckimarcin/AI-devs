@@ -1,7 +1,6 @@
 package pl.com.rozyccy.aidevs.tasks;
 
 import java.io.IOException;
-import org.apache.http.HttpStatus;
 import pl.com.rozyccy.aidevs.Tasks;
 import pl.com.rozyccy.aidevs.datamodel.AIDevsTaskResponse;
 import pl.com.rozyccy.aidevs.datamodel.StringAnswer;

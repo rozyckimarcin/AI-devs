@@ -1,13 +1,10 @@
 package pl.com.rozyccy.aidevs.tasks;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.HttpStatus;
+import java.io.IOException;
 import pl.com.rozyccy.aidevs.Tasks;
 import pl.com.rozyccy.aidevs.c01l04.ModerationTask;
 import pl.com.rozyccy.aidevs.datamodel.AIDevsTaskResponse;
 import pl.com.rozyccy.aidevs.datamodel.ModerationTaskAnswer;
-
-import java.io.IOException;
 
 public class Task2 extends Task {
   @Override
