@@ -1,4 +1,4 @@
-package pl.com.rozyccy.aidevs.c01l04.tasks;
+package pl.com.rozyccy.aidevs.tasks;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpStatus;
@@ -19,11 +19,8 @@ public class Task2 extends Task {
     AIDevsTaskResponse taskApiResponse = tasks.getTask(token.token());
     logger.info("Your task is: {}", taskApiResponse.msg());
     ModerationTaskAnswer answer = moderationTask.getAnswer(taskApiResponse.input());
-    int responseCode =
-        tasks.postAnswer(token.token(), new ObjectMapper().writeValueAsString(answer));
-    if (responseCode == HttpStatus.SC_OK) {
-      logger.info("!!! SUCCESS !!!");
-    }
+    int responseCode = tasks.postAnswer(token.token(), answer);
+    checkResponseCode(responseCode);
     return responseCode;
   }
 }

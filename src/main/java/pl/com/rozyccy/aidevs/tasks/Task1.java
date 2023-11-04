@@ -1,9 +1,10 @@
-package pl.com.rozyccy.aidevs.c01l04.tasks;
+package pl.com.rozyccy.aidevs.tasks;
 
 import java.io.IOException;
 import org.apache.http.HttpStatus;
 import pl.com.rozyccy.aidevs.Tasks;
 import pl.com.rozyccy.aidevs.datamodel.AIDevsTaskResponse;
+import pl.com.rozyccy.aidevs.datamodel.StringAnswer;
 
 public class Task1 extends Task {
 
@@ -14,11 +15,8 @@ public class Task1 extends Task {
     AIDevsTaskResponse taskApiResponse = tasks.getTask(tokenResponse.token());
     logger.info("Your task is: {}", taskApiResponse.msg());
     int responseCode =
-        tasks.postAnswer(
-            tokenResponse.token(), "{\"answer\":\"" + taskApiResponse.cookie() + "\"}");
-    if (responseCode == HttpStatus.SC_OK) {
-      logger.info("!!! SUCCESS !!!");
-    }
+        tasks.postAnswer(tokenResponse.token(), new StringAnswer(taskApiResponse.cookie()));
+    checkResponseCode(responseCode);
     return responseCode;
   }
 }

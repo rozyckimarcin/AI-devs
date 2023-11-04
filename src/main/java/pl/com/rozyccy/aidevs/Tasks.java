@@ -3,6 +3,7 @@ package pl.com.rozyccy.aidevs;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -10,14 +11,19 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.com.rozyccy.aidevs.datamodel.AIDevsTaskResponse;
+import pl.com.rozyccy.aidevs.datamodel.Answer;
 
 public class Tasks {
   private static final Logger logger = LogManager.getLogger(Tasks.class);
@@ -44,10 +50,16 @@ public class Tasks {
     return getResponseFromHttpClient(httpGetTask);
   }
 
-  public int postAnswer(String token, String answer) throws IOException {
+  public int postAnswer(String token, Answer answer) throws IOException {
     logger.info("Post AI-devs answer " + answer);
-    HttpPost httpPostTask = createHttpPostRequest(token, answer);
+    HttpPost httpPostTask = createHttpPostRequestJSON(token, objectMapper.writeValueAsString(answer));
     return getResponseCodeFromHttpClient(httpPostTask);
+  }
+
+  public AIDevsTaskResponse postQuestion(String token, String fieldName, String answer) throws IOException {
+    logger.info("Post AI-devs {} {} ", fieldName, answer);
+    HttpPost httpPostTask = createHttpPostRequest(token, fieldName, answer);
+    return getResponseFromHttpClient(httpPostTask);
   }
 
   private HttpPost createHttpPostTokenRequest(String token, Map<String, String> map)
@@ -60,10 +72,27 @@ public class Tasks {
     return httpPostTask;
   }
 
-  private HttpPost createHttpPostRequest(String token, String answer) {
+  private HttpPost createHttpPostRequestJSON(String token, String answer) {
     HttpPost httpPostTask = new HttpPost(getUri("answer", token));
     logger.info("JSON Answer object: " + answer);
     httpPostTask.setEntity(new StringEntity(answer, ContentType.APPLICATION_JSON));
+    return httpPostTask;
+  }
+
+  private HttpPost createHttpPostRequest(String token, String fieldName, String question)
+          throws UnsupportedEncodingException {
+    HttpPost httpPostTask = new HttpPost(getUri(fieldName, token));
+    logger.info("JSON {} object: {}", fieldName, question);
+    // Definiuj dane do wysłania jako pola formularza
+    List<BasicNameValuePair> formParameters = new ArrayList<>();
+    formParameters.add(new BasicNameValuePair("question", question));
+
+    // Utwórz encję formularza
+    UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(formParameters);
+
+    httpPostTask.setEntity(formEntity);
+
+    logger.debug("HTTP POST: {}", httpPostTask);
     return httpPostTask;
   }
 
@@ -71,13 +100,14 @@ public class Tasks {
     return AI_DEVS_URL + page + "/" + token;
   }
 
-  private AIDevsTaskResponse getResponseFromHttpClient(HttpRequestBase httpRequest) throws IOException {
+  private AIDevsTaskResponse getResponseFromHttpClient(HttpRequestBase httpRequest)
+      throws IOException {
     HttpResponse response = httpClient.execute(httpRequest);
-    AIDevsTaskResponse token = objectMapper.readValue(EntityUtils.toString(response.getEntity()), AIDevsTaskResponse.class);
+    AIDevsTaskResponse token =
+        objectMapper.readValue(
+            EntityUtils.toString(response.getEntity()), AIDevsTaskResponse.class);
     logger.debug(
-        "Response code: {}\nResponse body: {}",
-        response.getStatusLine().getStatusCode(),
-        token);
+        "Response code: {}\nResponse body: {}", response.getStatusLine().getStatusCode(), token);
     return token;
   }
 
