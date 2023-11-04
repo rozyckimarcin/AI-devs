@@ -1,5 +1,6 @@
-package pl.com.rozyccy.aidevs.c01l04.tasks;
+package pl.com.rozyccy.aidevs.tasks;
 
+import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -9,4 +10,10 @@ public abstract class Task {
   protected static final Logger logger = LogManager.getLogger(Task.class);
 
   public abstract int executeTask(String... parameters) throws IOException;
+
+  public void checkResponseCode(int responseCode) {
+    if (responseCode == HttpStatus.SC_OK) {
+      logger.info("!!! SUCCESS !!!");
+    }
+  }
 }
