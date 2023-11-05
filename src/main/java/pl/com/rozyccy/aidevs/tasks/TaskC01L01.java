@@ -5,7 +5,7 @@ import pl.com.rozyccy.aidevs.Tasks;
 import pl.com.rozyccy.aidevs.datamodel.AIDevsTaskResponse;
 import pl.com.rozyccy.aidevs.datamodel.StringAnswer;
 
-public class Task1 extends Task {
+public class TaskC01L01 extends Task {
 
   @Override
   public int executeTask(String... parameters) throws IOException {

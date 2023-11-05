@@ -8,10 +8,11 @@ public class Main {
   private static final Logger logger = LogManager.getLogger(Main.class);
 
   public static void main(String[] args) throws IOException {
-    executeTask(new Task1(), args);
-    executeTask(new Task2(), args);
-    executeTask(new Task3(), args);
-    executeTask(new Task4(), args);
+    executeTask(new TaskC01L01(), args);
+    executeTask(new TaskC01L04T01(), args);
+    executeTask(new TaskC01L04T02(), args);
+    executeTask(new TaskC01L05(), args);
+    executeTask(new TaskC02L02(), args);
   }
 
   private static void executeTask(Task task, String... parameters) throws IOException {
