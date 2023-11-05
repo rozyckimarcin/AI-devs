@@ -1,22 +1,23 @@
-package pl.com.rozyccy.aidevs.tasks;
+package pl.com.rozyccy.aidevs.exercises;
 
 import java.io.IOException;
-import pl.com.rozyccy.aidevs.Tasks;
-import pl.com.rozyccy.aidevs.c01l04.BloggerTask;
+
+import pl.com.rozyccy.aidevs.AIDevsApiExecutor;
+import pl.com.rozyccy.aidevs.tasks.BloggerTask;
 import pl.com.rozyccy.aidevs.datamodel.AIDevsTaskResponse;
 import pl.com.rozyccy.aidevs.datamodel.BlogTaskAnswer;
 
-public class TaskC01L04T02 extends Task {
+public class ExerciseC01L04T02 extends Exercise {
   @Override
   public int executeTask(String... parameters) throws IOException {
     String openAIKey = parameters[1];
-    Tasks tasks = new Tasks();
+    AIDevsApiExecutor AIDevsApiExecutor = new AIDevsApiExecutor();
     BloggerTask bloggerTask = new BloggerTask(openAIKey);
-    AIDevsTaskResponse token = tasks.getTokenForTask("blogger", parameters[0]);
-    AIDevsTaskResponse taskApiResponse = tasks.getTask(token.token());
+    AIDevsTaskResponse token = AIDevsApiExecutor.getTokenForTask("blogger", parameters[0]);
+    AIDevsTaskResponse taskApiResponse = AIDevsApiExecutor.getTask(token.token());
     logger.info("Your task is: {}", taskApiResponse.msg());
     BlogTaskAnswer answer = bloggerTask.getAnswer(taskApiResponse.blog());
-    int responseCode = tasks.postAnswer(token.token(), answer);
+    int responseCode = AIDevsApiExecutor.postAnswer(token.token(), answer);
     checkResponseCode(responseCode);
     return responseCode;
   }

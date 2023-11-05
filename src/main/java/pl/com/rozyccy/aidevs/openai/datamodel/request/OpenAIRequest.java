@@ -1,4 +1,4 @@
-package pl.com.rozyccy.aidevs.openai.datamodel;
+package pl.com.rozyccy.aidevs.openai.datamodel.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;

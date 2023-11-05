@@ -1,4 +1,4 @@
-package pl.com.rozyccy.aidevs.c01l04;
+package pl.com.rozyccy.aidevs.tasks;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -9,22 +9,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import pl.com.rozyccy.aidevs.OpenAIConnector;
 import pl.com.rozyccy.aidevs.OpenAIModelEnum;
 import pl.com.rozyccy.aidevs.datamodel.StringAnswer;
 import pl.com.rozyccy.aidevs.openai.datamodel.ChatCompletion;
-import pl.com.rozyccy.aidevs.openai.datamodel.RequestChatCompletion;
-import pl.com.rozyccy.aidevs.openai.datamodel.RequestMessage;
+import pl.com.rozyccy.aidevs.openai.datamodel.request.RequestChatCompletion;
+import pl.com.rozyccy.aidevs.openai.datamodel.request.RequestMessage;
 
-public class InputTask {
-  private static final Logger logger = LogManager.getLogger(InputTask.class);
-
-  OpenAIConnector openAIConnector;
+public class InputTask extends Task {
 
   public InputTask(String openAIKey) {
-    this.openAIConnector = new OpenAIConnector(openAIKey);
+    super(openAIKey);
   }
 
   public StringAnswer getAnswer(List<String> inputs, String question) throws IOException {
@@ -38,7 +32,7 @@ public class InputTask {
         inputAsAMap.get(nameFromQuestion));
 
     HttpResponse response =
-        openAIConnector.connectAndGetAnswer(
+        executeRequestToOpenAIAPI(
             "chat/completions",
             new RequestChatCompletion(
                 OpenAIModelEnum.GPT_3_5_TURBO.getModelName(),
@@ -47,9 +41,8 @@ public class InputTask {
                     new RequestMessage("user", question))));
 
     ChatCompletion responseStr =
-            new ObjectMapper()
-                    .readValue(
-                            EntityUtils.toString(response.getEntity()), ChatCompletion.class);
+        new ObjectMapper()
+            .readValue(EntityUtils.toString(response.getEntity()), ChatCompletion.class);
     logger.info("Response from OpenAI API:" + responseStr);
 
     return new StringAnswer(responseStr.choices().get(0).message().content());

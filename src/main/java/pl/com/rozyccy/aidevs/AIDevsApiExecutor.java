@@ -25,15 +25,15 @@ import org.apache.logging.log4j.Logger;
 import pl.com.rozyccy.aidevs.datamodel.AIDevsTaskResponse;
 import pl.com.rozyccy.aidevs.datamodel.Answer;
 
-public class Tasks {
-  private static final Logger logger = LogManager.getLogger(Tasks.class);
+public class AIDevsApiExecutor {
+  private static final Logger logger = LogManager.getLogger(AIDevsApiExecutor.class);
 
   protected CloseableHttpClient httpClient;
   private final ObjectMapper objectMapper;
 
   private static final String AI_DEVS_URL = "https://zadania.aidevs.pl/";
 
-  public Tasks() {
+  public AIDevsApiExecutor() {
     this.httpClient = HttpClients.createDefault();
     this.objectMapper = new ObjectMapper();
   }
