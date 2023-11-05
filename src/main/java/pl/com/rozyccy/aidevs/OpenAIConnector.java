@@ -9,7 +9,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import pl.com.rozyccy.aidevs.openai.datamodel.OpenAIRequest;
+import pl.com.rozyccy.aidevs.openai.datamodel.request.OpenAIRequest;
 
 public class OpenAIConnector {
   private static final Logger logger = LogManager.getLogger(OpenAIConnector.class);

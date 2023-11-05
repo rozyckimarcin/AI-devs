@@ -1,4 +1,4 @@
-package pl.com.rozyccy.aidevs.openai.datamodel;
+package pl.com.rozyccy.aidevs.openai.datamodel.request;
 
 import java.util.List;
 

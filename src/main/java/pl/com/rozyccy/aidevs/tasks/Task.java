@@ -1,19 +1,22 @@
 package pl.com.rozyccy.aidevs.tasks;
 
-import org.apache.http.HttpStatus;
+import java.io.IOException;
+import org.apache.http.HttpResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.io.IOException;
+import pl.com.rozyccy.aidevs.OpenAIConnector;
+import pl.com.rozyccy.aidevs.openai.datamodel.request.OpenAIRequest;
 
 public abstract class Task {
   protected static final Logger logger = LogManager.getLogger(Task.class);
+  protected OpenAIConnector openAIConnector;
 
-  public abstract int executeTask(String... parameters) throws IOException;
+  public Task(String openAIKey) {
+    this.openAIConnector = new OpenAIConnector(openAIKey);
+  }
 
-  public void checkResponseCode(int responseCode) {
-    if (responseCode == HttpStatus.SC_OK) {
-      logger.info("!!! SUCCESS !!!");
-    }
+  protected HttpResponse executeRequestToOpenAIAPI(String taskName, OpenAIRequest request)
+      throws IOException {
+    return openAIConnector.connectAndGetAnswer(taskName, request);
   }
 }

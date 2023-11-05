@@ -1,20 +1,20 @@
-package pl.com.rozyccy.aidevs.tasks;
+package pl.com.rozyccy.aidevs.exercises;
 
 import java.io.IOException;
-import pl.com.rozyccy.aidevs.Tasks;
+import pl.com.rozyccy.aidevs.AIDevsApiExecutor;
 import pl.com.rozyccy.aidevs.datamodel.AIDevsTaskResponse;
 import pl.com.rozyccy.aidevs.datamodel.StringAnswer;
 
-public class TaskC01L05 extends Task {
+public class ExerciseC01L05 extends Exercise {
   @Override
   public int executeTask(String... parameters) throws IOException {
-    Tasks tasks = new Tasks();
-    AIDevsTaskResponse token = tasks.getTokenForTask("liar", parameters[0]);
+    AIDevsApiExecutor AIDevsApiExecutor = new AIDevsApiExecutor();
+    AIDevsTaskResponse token = AIDevsApiExecutor.getTokenForTask("liar", parameters[0]);
     AIDevsTaskResponse response =
-        tasks.postQuestion(token.token(), "task", " What is capital of Poland?");
+        AIDevsApiExecutor.postQuestion(token.token(), "task", " What is capital of Poland?");
     logger.info("Response code is: {}", response);
     int responseCode =
-        tasks.postAnswer(
+        AIDevsApiExecutor.postAnswer(
             token.token(), checkIfAnswerIsOnTopic(response.answer(), "Warsaw", "Poland"));
     checkResponseCode(responseCode);
     return responseCode;
