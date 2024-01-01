@@ -14,6 +14,7 @@ public class Main {
     executeTask(new ExerciseC01L05(), args);
     executeTask(new ExerciseC02L02(), args);
     executeTask(new ExerciseC02L03(), args);
+    executeTask(new ExerciseC02L04(), args);
   }
 
   private static void executeTask(Exercise exercise, String... parameters) throws IOException {

@@ -11,6 +11,7 @@ public record AIDevsTaskResponse(
     List<String> blog,
     String answer,
     String question,
+    String hint,
     String hint1,
     String hint2,
     String hint3) {}
