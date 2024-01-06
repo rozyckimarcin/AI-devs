@@ -42,7 +42,7 @@ public class ScraperTask extends Task {
         ChatCompletion responseStr =
                 new ObjectMapper()
                         .readValue(EntityUtils.toString(response.getEntity()), ChatCompletion.class);
-        logger.info("Response from OpenAI API:" + responseStr);
+        logger.info("Response from OpenAI API: {}", responseStr);
 
         return new StringAnswer(responseStr.choices().getFirst().message().content());
     }
