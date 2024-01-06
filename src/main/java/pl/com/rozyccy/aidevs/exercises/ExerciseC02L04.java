@@ -13,7 +13,8 @@ public class ExerciseC02L04 extends Exercise {
     String openAIKey = parameters[1];
     AIDevsApiExecutor AIDevsApiExecutor = new AIDevsApiExecutor();
     AIDevsTaskResponse token = AIDevsApiExecutor.getTokenForTask("whisper", parameters[0]);
-    AIDevsTaskResponse taskApiResponse = AIDevsApiExecutor.getTask(token.token());
+    // TODO Can be created separate response class
+    AIDevsTaskResponse taskApiResponse = AIDevsApiExecutor.getTask(token.token(), AIDevsTaskResponse.class);
     logger.info("Your task is: {}", taskApiResponse.msg());
 
     WhisperTask whisperTask = new WhisperTask(openAIKey);

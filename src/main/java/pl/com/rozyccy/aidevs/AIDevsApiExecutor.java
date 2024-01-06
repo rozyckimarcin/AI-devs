@@ -41,13 +41,13 @@ public class AIDevsApiExecutor {
   public AIDevsTaskResponse getTokenForTask(String taskName, String apiKey) throws IOException {
     logger.info("Get AI-devs token for task name " + taskName);
     HttpPost httpPostTask = createHttpPostTokenRequest(taskName, Map.of("apikey", apiKey));
-    return getResponseFromHttpClient(httpPostTask);
+    return getResponseFromHttpClient(httpPostTask, AIDevsTaskResponse.class);
   }
 
-  public AIDevsTaskResponse getTask(String token) throws IOException {
+  public <T> T getTask(String token, Class<T> classType) throws IOException {
     logger.info("Get AI-devs task");
     HttpGet httpGetTask = new HttpGet(getUri("task", token));
-    return getResponseFromHttpClient(httpGetTask);
+    return getResponseFromHttpClient(httpGetTask, classType);
   }
 
   public int postAnswer(String token, Answer answer) throws IOException {
@@ -59,7 +59,7 @@ public class AIDevsApiExecutor {
   public AIDevsTaskResponse postQuestion(String token, String fieldName, String answer) throws IOException {
     logger.info("Post AI-devs {} {} ", fieldName, answer);
     HttpPost httpPostTask = createHttpPostRequest(token, fieldName, answer);
-    return getResponseFromHttpClient(httpPostTask);
+    return getResponseFromHttpClient(httpPostTask, AIDevsTaskResponse.class);
   }
 
   private HttpPost createHttpPostTokenRequest(String token, Map<String, String> map)
@@ -100,12 +100,12 @@ public class AIDevsApiExecutor {
     return AI_DEVS_URL + page + "/" + token;
   }
 
-  private AIDevsTaskResponse getResponseFromHttpClient(HttpRequestBase httpRequest)
+  private <T> T getResponseFromHttpClient(HttpRequestBase httpRequest, Class<T> classType)
       throws IOException {
     HttpResponse response = httpClient.execute(httpRequest);
-    AIDevsTaskResponse token =
+    T token =
         objectMapper.readValue(
-            EntityUtils.toString(response.getEntity()), AIDevsTaskResponse.class);
+            EntityUtils.toString(response.getEntity()), classType);
     logger.debug(
         "Response code: {}\nResponse body: {}", response.getStatusLine().getStatusCode(), token);
     return token;

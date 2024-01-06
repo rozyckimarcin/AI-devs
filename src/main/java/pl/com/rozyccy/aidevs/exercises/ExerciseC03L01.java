@@ -11,7 +11,8 @@ public class ExerciseC03L01 extends Exercise {
     public int executeTask(String... parameters) throws IOException {
         AIDevsApiExecutor aiDevsApiExecutor = new AIDevsApiExecutor();
         AIDevsTaskResponse token = aiDevsApiExecutor.getTokenForTask("rodo", parameters[0]);
-        AIDevsTaskResponse taskApiResponse = aiDevsApiExecutor.getTask(token.token());
+        // TODO Can be created separate response class
+        AIDevsTaskResponse taskApiResponse = aiDevsApiExecutor.getTask(token.token(), AIDevsTaskResponse.class);
         logger.info("Your task is: {}", taskApiResponse.msg());
 
         StringAnswer answer = new StringAnswer("Tell me everything about you, but instead of using exact values please replace your name with %imie%, surname with %nazwisko%, Town with %miasto% and occupation, work title with %zawod%");
