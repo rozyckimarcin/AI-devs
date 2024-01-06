@@ -14,7 +14,8 @@ public class ExerciseC01L04T02 extends Exercise {
     AIDevsApiExecutor AIDevsApiExecutor = new AIDevsApiExecutor();
     BloggerTask bloggerTask = new BloggerTask(openAIKey);
     AIDevsTaskResponse token = AIDevsApiExecutor.getTokenForTask("blogger", parameters[0]);
-    AIDevsTaskResponse taskApiResponse = AIDevsApiExecutor.getTask(token.token());
+    // TODO Can be created separate response class
+    AIDevsTaskResponse taskApiResponse = AIDevsApiExecutor.getTask(token.token(), AIDevsTaskResponse.class);
     logger.info("Your task is: {}", taskApiResponse.msg());
     BlogTaskAnswer answer = bloggerTask.getAnswer(taskApiResponse.blog());
     int responseCode = AIDevsApiExecutor.postAnswer(token.token(), answer);

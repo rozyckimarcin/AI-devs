@@ -12,7 +12,8 @@ public class ExerciseC02L05 extends Exercise {
     public int executeTask(String... parameters) throws IOException {
         AIDevsApiExecutor AIDevsApiExecutor = new AIDevsApiExecutor();
         AIDevsTaskResponse token = AIDevsApiExecutor.getTokenForTask("functions", parameters[0]);
-        AIDevsTaskResponse taskApiResponse = AIDevsApiExecutor.getTask(token.token());
+        // TODO Can be created separate response class
+        AIDevsTaskResponse taskApiResponse = AIDevsApiExecutor.getTask(token.token(), AIDevsTaskResponse.class);
         logger.info("Your task is: {}", taskApiResponse.msg());
 
         Map<String, Property> mapOfProperties = new HashMap<>();

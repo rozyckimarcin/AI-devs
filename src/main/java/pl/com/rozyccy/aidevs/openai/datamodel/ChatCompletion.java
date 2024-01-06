@@ -9,4 +9,5 @@ public record ChatCompletion(
     String model,
     List<Choice> choices,
     Usage usage,
-    Error error) {}
+    Error error,
+    String system_fingerprint) {}

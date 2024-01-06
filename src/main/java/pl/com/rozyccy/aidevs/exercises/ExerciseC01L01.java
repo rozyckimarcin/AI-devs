@@ -12,7 +12,8 @@ public class ExerciseC01L01 extends Exercise {
   public int executeTask(String... parameters) throws IOException {
     AIDevsApiExecutor AIDevsApiExecutor = new AIDevsApiExecutor();
     AIDevsTaskResponse tokenResponse = AIDevsApiExecutor.getTokenForTask("helloapi", parameters[0]);
-    AIDevsTaskResponse taskApiResponse = AIDevsApiExecutor.getTask(tokenResponse.token());
+    // TODO Can be created separate response class
+    AIDevsTaskResponse taskApiResponse = AIDevsApiExecutor.getTask(tokenResponse.token(), AIDevsTaskResponse.class);
     logger.info("Your task is: {}", taskApiResponse.msg());
     int responseCode =
         AIDevsApiExecutor.postAnswer(tokenResponse.token(), new StringAnswer(taskApiResponse.cookie()));

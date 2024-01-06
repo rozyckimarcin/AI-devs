@@ -13,7 +13,8 @@ public class ExerciseC01L04T01 extends Exercise {
     AIDevsApiExecutor AIDevsApiExecutor = new AIDevsApiExecutor();
     ModerationTask moderationTask = new ModerationTask(openAIKey);
     AIDevsTaskResponse token = AIDevsApiExecutor.getTokenForTask("moderation", parameters[0]);
-    AIDevsTaskResponse taskApiResponse = AIDevsApiExecutor.getTask(token.token());
+    // TODO Can be created separate response class
+    AIDevsTaskResponse taskApiResponse = AIDevsApiExecutor.getTask(token.token(), AIDevsTaskResponse.class);
     logger.info("Your task is: {}", taskApiResponse.msg());
     ModerationTaskAnswer answer = moderationTask.getAnswer(taskApiResponse.input());
     int responseCode = AIDevsApiExecutor.postAnswer(token.token(), answer);
