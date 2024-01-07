@@ -19,6 +19,7 @@ public class Main {
     executeTask(new ExerciseC02L05(), args);
     executeTask(new ExerciseC03L01(), args);
     executeTask(new ExerciseC03L02(), args);
+    executeTask(new ExerciseC03L03(), args);
   }
 
   private static void executeTask(Exercise exercise, String... parameters) throws IOException, InterruptedException, URISyntaxException {
