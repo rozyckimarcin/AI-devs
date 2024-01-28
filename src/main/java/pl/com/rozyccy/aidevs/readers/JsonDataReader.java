@@ -3,7 +3,6 @@ package pl.com.rozyccy.aidevs.readers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import pl.com.rozyccy.aidevs.exercises.Exercise;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JsonDataReader {
-    private static final Logger logger = LogManager.getLogger(Exercise.class);
+    private static final Logger logger = LogManager.getLogger(JsonDataReader.class);
 
     public List<UnknownFacts> readInData(File jsonFile) {
         List<UnknownFacts> data = new ArrayList<>();

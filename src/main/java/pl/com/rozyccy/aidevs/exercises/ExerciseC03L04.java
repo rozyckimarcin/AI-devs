@@ -51,13 +51,12 @@ public class ExerciseC03L04 extends Exercise {
         EmbeddingAnswer embeddingQuestion = embeddingTask.getAnswer(taskApiResponse.question());
 
         QdrantSearcher qdrantSearcher = new QdrantSearcher();
-        List<Points.ScoredPoint> scoredPoints;
+        List<Points.ScoredPoint> scoredPoints = null;
         try {
             scoredPoints = qdrantSearcher.search(embeddingQuestion.answer());
         } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+            logger.error("Error while connecting to qdrant database.", e);
         }
-
 
         logger.info("find scored points: {}", scoredPoints);
 
